@@ -1,0 +1,21 @@
+[submodule "frontend-soa"]
+	path = frontend-soa
+	url = https://github.com/ivanJanicevic/frontend-soa.git
+[submodule "service-tours"]
+	path = service-tours
+	url = https://github.com/ratkovac/service-tours.git
+[submodule "api-gateway1"]
+	path = api-gateway1
+	url = https://github.com/NikolaLetvencuk/api-gateway1.git
+[submodule "service-stakeholders"]
+	path = service-stakeholders
+	url = https://github.com/ratkovac/service-stakeholders.git
+[submodule "service-blog"]
+	path = service-blog
+	url = https://github.com/kikaaat5/service-blog.git
+[submodule "service-follower"]
+	path = service-follower
+	url = https://github.com/NikolaLetvencuk/follower-service.git
+[submodule "service-registry"]
+	path = service-registry
+	url = https://github.com/NikolaLetvencuk/service-registry.git
