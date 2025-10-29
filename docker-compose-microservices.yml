@@ -1,0 +1,89 @@
+services:
+  api-gateway:
+    build: ./api-gateway1
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=docker
+      - STAKEHOLDERS_SERVICE_URL=http://service-stakeholders:8081
+      - GRPC_STAKEHOLDERS_HOST=service-stakeholders
+      - GRPC_STAKEHOLDERS_PORT=9091
+      - EUREKA_CLIENT_ENABLED=false
+    depends_on:
+      - service-stakeholders
+      - service-tours
+    networks:
+      - soa-network
+  service-stakeholders:
+    build: ./service-stakeholders
+    container_name: service-stakeholders
+    ports:
+      - "8081:8081"
+      - "9091:9091"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/stakeholders
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=super
+      - SERVER_PORT=8081
+      - GRPC_SERVER_PORT=9091
+      - EUREKA_CLIENT_ENABLED=false
+      - JWT_SECRET=YjNkJmYtN2U5YS00ZDYyLWI5YjMtY2M3YzY3YjM4ZjZlNzY1ODFhNDctZWI0ZS00ZmY4LWE0YWMtMGI0ZTIzOWQwZWY1
+      - JWT_EXPIRATION=86400000
+    depends_on:
+      - postgres-stakeholders
+    networks:
+      - soa-network
+  service-tours:
+    build: ./service-tours
+    container_name: service-tours
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/tours
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=super
+      - SERVER_PORT=8083
+      - GRPC_CLIENT_STAKEHOLDERS-SERVICE_ADDRESS=static://service-stakeholders:9091
+      - GRPC_CLIENT_STAKEHOLDERS-SERVICE_NEGOTIATIONTYPE=PLAINTEXT
+      - EUREKA_CLIENT_ENABLED=false
+    depends_on:
+      - postgres-tours
+      - service-stakeholders
+    networks:
+      - soa-network
+  postgres-stakeholders:
+    image: postgres:15
+    container_name: postgres-stakeholders
+    environment:
+      - POSTGRES_DB=stakeholders
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=super
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_stakeholders_data:/var/lib/postgresql/data
+    networks:
+      - soa-network
+  postgres-tours:
+    image: postgres:15
+    container_name: postgres-tours
+    environment:
+      - POSTGRES_DB=tours
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=super
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_tours_data:/var/lib/postgresql/data
+    networks:
+      - soa-network
+volumes:
+  postgres_stakeholders_data:
+    driver: local
+  postgres_tours_data:
+    driver: local
+networks:
+  soa-network:
+    driver: bridge
