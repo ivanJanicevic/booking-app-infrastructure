@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   api-gateway:
     build: ./api-gateway1
@@ -14,8 +16,11 @@ services:
     depends_on:
       - service-stakeholders
       - service-tours
+      - service-blog
+      - service-follower
     networks:
       - soa-network
+
   service-stakeholders:
     build: ./service-stakeholders
     container_name: service-stakeholders
@@ -35,6 +40,7 @@ services:
       - postgres-stakeholders
     networks:
       - soa-network
+
   service-tours:
     build: ./service-tours
     container_name: service-tours
@@ -53,6 +59,33 @@ services:
       - service-stakeholders
     networks:
       - soa-network
+
+  service-blog:
+    build: ./service-blog
+    container_name: service-blog
+    ports:
+      - "8084:8084"
+    environment:
+      - PORT=8084
+      - DATABASE_URL=postgres://postgres:super@host.docker.internal:5435/blog?sslmode=disable
+    depends_on:
+      - postgres-blog
+    networks:
+      - soa-network
+
+  service-follower:
+    build: ./service-follower
+    container_name: service-follower
+    ports:
+      - "8085:8085"
+    environment:
+      - PORT=8085
+      - DATABASE_URL=postgres://postgres:super@host.docker.internal:5436/follower?sslmode=disable
+    depends_on:
+      - postgres-follower
+    networks:
+      - soa-network
+
   postgres-stakeholders:
     image: postgres:15
     container_name: postgres-stakeholders
@@ -66,6 +99,7 @@ services:
       - postgres_stakeholders_data:/var/lib/postgresql/data
     networks:
       - soa-network
+
   postgres-tours:
     image: postgres:15
     container_name: postgres-tours
@@ -79,11 +113,123 @@ services:
       - postgres_tours_data:/var/lib/postgresql/data
     networks:
       - soa-network
+
+  postgres-blog:
+    image: postgres:15
+    container_name: postgres-blog
+    environment:
+      - POSTGRES_DB=blog
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=super
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_blog_data:/var/lib/postgresql/data
+    networks:
+      - soa-network
+
+  postgres-follower:
+    image: postgres:15
+    container_name: postgres-follower
+    environment:
+      - POSTGRES_DB=follower
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=super
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_follower_data:/var/lib/postgresql/data
+    networks:
+      - soa-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml
+    networks:
+      - monitor-net
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - monitor-net
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8888:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - monitor-net
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data:/loki
+    networks:
+      - monitor-net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log
+      - ./monitoring/promtail:/etc/promtail
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/promtail.yml
+    networks:
+      - monitor-net
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+      - "9411:9411"
+    networks:
+      - monitor-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitor-net
+
 volumes:
   postgres_stakeholders_data:
-    driver: local
   postgres_tours_data:
-    driver: local
+  postgres_blog_data:
+  postgres_follower_data:
+  prometheus-data:
+  grafana-data:
+  loki-data:
+  jaeger-data:
+
 networks:
   soa-network:
+    driver: bridge
+  monitor-net:
     driver: bridge
