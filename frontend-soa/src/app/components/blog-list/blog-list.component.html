@@ -1,0 +1,36 @@
+<div class="blog-page">
+  <h2>Blogovi</h2>
+
+  <div class="blog-post" *ngFor="let blog of blogs">
+    <h3>{{ blog.title }}</h3>
+    <p class="desc">{{ blog.description }}</p>
+
+    <div class="actions">
+      <button (click)="likeBlog(blog)">
+        ❤️ {{ blog.likes }}
+      </button>
+      <button (click)="toggleComments(blog)">
+        💬 {{ blog.comments.length }}
+      </button>
+    </div>
+
+    <div class="comments" *ngIf="blog.showComments">
+      <h4>Komentari</h4>
+      <div *ngIf="blog.comments.length === 0" class="no-comments">Još nema komentara 😔</div>
+
+      <div *ngFor="let comment of blog.comments" class="comment">
+        <p>{{ comment.text }}</p>
+      </div>
+
+      <div class="add-comment">
+        <input
+          type="text"
+          placeholder="Dodaj komentar..."
+          [(ngModel)]="blog.newComment"
+          (keyup.enter)="addComment(blog)"
+        />
+        <button (click)="addComment(blog)">Pošalji</button>
+      </div>
+    </div>
+  </div>
+</div>

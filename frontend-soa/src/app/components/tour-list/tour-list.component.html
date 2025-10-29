@@ -1,0 +1,115 @@
+<!-- src/app/components/tour-list/tour-list.component.html (AŽURIRANO) -->
+<div class="tour-page">
+  <div class="page-header">
+    <h2>Moje Ture</h2>
+    <a routerLink="/tours/create" class="create-btn">+ Kreiraj novu turu</a>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label for="tagFilter">Pretraži po tagu:</label>
+      <input id="tagFilter" type="text" placeholder="Unesite tag..." [(ngModel)]="selectedTag"
+        (keyup.enter)="filterByTag()" />
+      <button (click)="filterByTag()">Pretraži</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Učitavanje tura...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && tours.length === 0" class="no-tours">
+    <p>Nemate kreiranih tura.</p>
+    <a routerLink="/tours/create" class="create-first-btn">Kreiraj svoju prvu turu</a>
+  </div>
+
+  <div class="tour-list" *ngIf="!loading && tours.length > 0">
+    <div class="tour-card" *ngFor="let tour of tours">
+      <div class="tour-header">
+        <h3>{{ tour.naziv }}</h3>
+        <span class="status-badge" [ngClass]="getStatusClass(tour.status)">
+          {{ getStatusLabel(tour.status) }}
+        </span>
+      </div>
+
+      <p class="tour-description">{{ tour.opis }}</p>
+
+      <div class="tour-details">
+        <div class="detail-item">
+          <strong>Težina:</strong> {{ getDifficultyLabel(tour.tezina) }}
+        </div>
+        <div class="detail-item">
+          <strong>Cena:</strong> {{ tour.cijena | currency:'EUR':'symbol':'1.2-2' }}
+        </div>
+        <div class="detail-item" *ngIf="tour.duzina">
+          <strong>Dužina:</strong> {{ tour.duzina }} km
+        </div>
+        <div class="detail-item" *ngIf="tour.tagovi">
+          <strong>Tagovi:</strong> {{ tour.tagovi }}
+        </div>
+        <div class="detail-item">
+          <strong>Kreirano:</strong> {{ tour.createdAt | date:'dd.MM.yyyy HH:mm' }}
+        </div>
+      </div>
+
+      <!-- Trajanja za različite prevozne opcije -->
+      <div class="tour-transport" *ngIf="tour.prevozi && Object.keys(tour.prevozi).length > 0">
+        <h4>⏱️ Trajanje:</h4>
+        <div class="transport-options">
+          <div class="transport-item" *ngIf="tour.prevozi['PESKE']">
+            <span class="transport-icon">🚶</span>
+            <span class="transport-label">Pešice:</span>
+            <span class="transport-time">{{ formatDuration(tour.prevozi['PESKE']) }}</span>
+          </div>
+          <div class="transport-item" *ngIf="tour.prevozi['BICIKL']">
+            <span class="transport-icon">🚴</span>
+            <span class="transport-label">Bicikl:</span>
+            <span class="transport-time">{{ formatDuration(tour.prevozi['BICIKL']) }}</span>
+          </div>
+          <div class="transport-item" *ngIf="tour.prevozi['AUTOMOBIL']">
+            <span class="transport-icon">🚗</span>
+            <span class="transport-label">Auto:</span>
+            <span class="transport-time">{{ formatDuration(tour.prevozi['AUTOMOBIL']) }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="tour-review">
+        <button (click)="openReviewForm(tour.id)">Ostavi recenziju</button>
+      </div>
+      <div class="tour-actions">
+        <button class="btn-start-tour" (click)="startTour(tour.id)"
+          [disabled]="!isTourRunnable(tour.status) || (activeTourExecution && activeTourExecution.status === TourExecutionStatus.STARTED)"
+          [class.disabled-btn]="!isTourRunnable(tour.status) || (activeTourExecution && activeTourExecution.status === TourExecutionStatus.STARTED)">
+          Pokreni turu
+        </button>
+        <button class="btn-keypoints" [routerLink]="['/tours', tour.id, 'keypoints']">
+            📍 Ključne tačke
+          </button>
+          <button *ngIf="tour.status === 'DRAFT'" class="btn-publish" (click)="publishTour(tour)">
+            📤 Objavi
+          </button>
+          <button *ngIf="tour.status === 'PUBLISHED'" class="btn-archive" (click)="archiveTour(tour)">
+            📦 Arhiviraj
+          </button>
+          <button *ngIf="tour.status === 'ARCHIVED'" class="btn-activate" (click)="activateTour(tour)">
+            ✅ Aktiviraj
+          </button>
+          <button *ngIf="tour.status === 'DRAFT'" class="btn-edit" [routerLink]="['/tours/edit', tour.id]">
+            ✏️ Izmeni
+          </button>
+          <button class="btn-delete" (click)="deleteTour(tour)">
+            🗑️ Obriši
+          </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modalni prozor za recenziju -->
+  <app-review-form *ngIf="showReviewForm && selectedTourIdForReview !== null" [tourId]="selectedTourIdForReview"
+    (reviewSubmitted)="onReviewSubmitted()" (close)="closeReviewForm()"></app-review-form>
+
+</div>

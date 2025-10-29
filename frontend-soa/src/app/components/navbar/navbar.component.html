@@ -1,0 +1,18 @@
+<nav class="sidebar">
+  <h2 class="logo">SOA Tourist</h2>
+  <ul>
+    <li *ngIf="!isAdmin()"><a routerLink="/blogs" routerLinkActive="active">Blogovi</a></li>
+    <li *ngIf="!isAdmin()"><a routerLink="/tours" routerLinkActive="active">Ture</a></li>
+    <li><a routerLink="/profile" routerLinkActive="active">Profil</a></li>
+    <li><a routerLink="/about" routerLinkActive="active">O nama</a></li>
+    <ng-container *ngIf="!isUserLoggedIn()">
+      <li><a routerLink="/login" routerLinkActive="active">Login</a></li>
+      <li><a routerLink="/register" routerLinkActive="active">Register</a></li>
+    </ng-container>
+
+    <ng-container *ngIf="isUserLoggedIn()">
+      <li *ngIf="isAdmin()"><a routerLink="/admin/users" routerLinkActive="active">Admin Panel</a></li>
+      <li><a (click)="logout()" style="cursor: pointer;">Logout</a></li>
+    </ng-container>
+  </ul>
+</nav>

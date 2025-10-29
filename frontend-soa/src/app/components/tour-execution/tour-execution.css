@@ -1,0 +1,240 @@
+/* src/app/components/tour-execution/tour-execution.component.css */
+.tour-execution-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.page-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.back-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #0056b3;
+}
+
+.loading, .error {
+  padding: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+.error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.execution-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.execution-card h3 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.execution-card p {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: bold;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.status-started { background-color: #28a745; } /* Green */
+.status-completed { background-color: #6c757d; } /* Gray */
+.status-abandoned { background-color: #dc3545; } /* Red */
+
+.execution-actions {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+}
+
+.execution-actions button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex-grow: 1;
+}
+
+.execution-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.btn-complete {
+  background-color: #28a745; /* Green */
+  color: white;
+}
+
+.btn-complete:hover {
+  background-color: #218838;
+}
+
+.btn-abandon {
+  background-color: #dc3545; /* Red */
+  color: white;
+}
+
+.btn-abandon:hover {
+  background-color: #c82333;
+}
+
+.btn-simulator {
+  background-color: #17a2b8; /* Info blue */
+  color: white;
+}
+
+.btn-simulator:hover {
+  background-color: #138496;
+}
+
+.key-points-section {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin-top: 30px;
+}
+
+.key-points-section h3 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.no-keypoints {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-style: italic;
+}
+
+.key-point-list {
+  list-style: none;
+  padding: 0;
+}
+
+.key-point-list li {
+  background-color: #f8f9fa;
+  border: 1px solid #e2e6ea;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+.key-point-list li.completed {
+  background-color: #e6ffed; /* Light green for completed */
+  border-color: #a3e6b4;
+}
+
+.key-point-list li h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.key-point-list li p {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.key-point-location {
+  font-size: 0.9rem;
+  color: #888;
+  font-style: italic;
+}
+
+.completed-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #28a745;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* Map container u tour-execution-u, samo stil za wrapping */
+.map-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.map-container h3 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* styles.css ili tour-execution.component.css */
+.custom-simulator-dialog .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 0; /* Ukloni defaultni padding ako ga komponenta simulatora ima */
+  overflow: hidden; /* Osiguraj da mapa ne "curi" van dialoga */
+}
+
+/* Podesi poziciju simulatora */
+.custom-simulator-dialog {
+  position: absolute !important;
+  top: 50px !important;
+  right: 50px !important;
+  transform: none !important; /* Resetuje transformaciju koju Material dodaje */
+}

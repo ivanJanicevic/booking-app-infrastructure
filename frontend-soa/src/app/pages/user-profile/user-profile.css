@@ -1,0 +1,131 @@
+.profile-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 30px;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info h2 {
+  margin: 0 0 10px 0;
+  color: #34495e;
+  font-size: 2em;
+}
+
+.profile-info .motto {
+  font-style: italic;
+  color: #7f8c8d;
+  font-size: 1.1em;
+  margin-top: 5px;
+}
+
+.profile-details h3 {
+  color: #34495e;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+
+.profile-details p {
+  line-height: 1.6;
+  color: #555;
+}
+
+.profile-actions {
+  text-align: center;
+  margin-top: 40px;
+}
+
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
+  margin: 0 10px;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+.cancel-button {
+  background-color: #e74c3c;
+}
+
+.cancel-button:hover {
+  background-color: #c0392b;
+}
+
+/* Edit mode styles */
+.edit-field {
+  margin-bottom: 15px;
+}
+
+.edit-field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #2c3e50;
+}
+
+.edit-field input[type='text'],
+.edit-field textarea,
+.edit-field input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  box-sizing: border-box; /* Važno za padding */
+}
+
+.edit-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.profile-picture-preview {
+  max-width: 100px;
+  height: auto;
+  border-radius: 5px;
+  margin-top: 10px;
+  border: 1px solid #eee;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.preview-text {
+  margin-top: 10px;
+  font-style: italic;
+  color: #7f8c8d;
+}

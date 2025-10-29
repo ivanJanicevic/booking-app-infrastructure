@@ -1,0 +1,87 @@
+<div class="profile-container">
+  <h1>Korisnički Profil</h1>
+
+  <div *ngIf="userProfile">
+    <div class="profile-header">
+      <img
+        [src]="currentProfilePictureForDisplay"
+        alt="Profilna Slika"
+        class="profile-picture"
+      />
+      <div class="profile-info">
+        <div *ngIf="!isEditing; else editHeader">
+          <h2>{{ userProfile.firstName }} {{ userProfile.lastName }}</h2>
+          <p class="motto">"{{ userProfile.motto }}"</p>
+        </div>
+        <ng-template #editHeader>
+          <div class="edit-field">
+            <label for="firstName">Ime:</label>
+            <input
+              id="firstName"
+              [(ngModel)]="editableProfile!.firstName"
+              placeholder="Ime"
+            />
+          </div>
+          <div class="edit-field">
+            <label for="lastName">Prezime:</label>
+            <input
+              id="lastName"
+              [(ngModel)]="editableProfile!.lastName"
+              placeholder="Prezime"
+            />
+          </div>
+          <div class="edit-field">
+            <label for="motto">Moto:</label>
+            <input
+              id="motto"
+              [(ngModel)]="editableProfile!.motto"
+              placeholder="Tvoj moto"
+            />
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <h3>Biografija:</h3>
+      <div *ngIf="!isEditing; else editBiography" class="biography">
+        <p style="margin-left: 10px; margin-top: 0;">{{ userProfile.biography || 'Nema biografije.' }}</p>
+      </div>
+      <ng-template #editBiography>
+        <div class="edit-field">
+          <textarea
+            id="biography"
+            [(ngModel)]="editableProfile!.biography"
+            placeholder="Napiši nešto o sebi..."
+          ></textarea>
+        </div>
+      </ng-template>
+
+      <!-- DEO ZA UPLOAD SLIKE -->
+      <div class="edit-field" *ngIf="isEditing">
+        <label for="profileImageUpload">Promeni Profilnu Sliku:</label>
+        <input
+          type="file"
+          id="profileImageUpload"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        />
+      </div>
+      <!-- KRAJ DELA ZA UPLOAD SLIKE -->
+    </div>
+
+    <div class="profile-actions">
+      <button *ngIf="!isEditing" (click)="toggleEditMode()">
+        Uredi Profil
+      </button>
+      <div *ngIf="isEditing">
+        <button (click)="saveProfile()">Sačuvaj Izmene</button>
+        <button (click)="cancelEdit()" class="cancel-button">Odustani</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!userProfile && !isEditing">
+    <p>Učitavanje profila...</p>
+  </div>
+</div>

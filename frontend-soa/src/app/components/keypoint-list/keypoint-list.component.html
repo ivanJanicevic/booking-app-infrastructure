@@ -1,0 +1,65 @@
+<div class="keypoint-page">
+  <div class="page-header">
+    <h2>Ključne tačke ture</h2>
+    <div class="header-actions">
+      <button class="back-btn" (click)="goBack()">← Nazad</button>
+      <a *ngIf="tourId && isDraft()" [routerLink]="['/tours', tourId, 'keypoints', 'create']" class="create-btn">
+        + Dodaj ključnu tačku
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Učitavanje ključnih tačaka...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <!-- Map Section -->
+  <div class="keypoint-map-container" *ngIf="!loading && keyPoints.length > 0">
+    <h3>Pregled ključnih tačaka na mapi</h3>
+    <div id="keypoint-map" class="keypoint-map"></div>
+  </div>
+
+  <div *ngIf="!loading && keyPoints.length === 0" class="no-keypoints">
+    <p>Nema ključnih tačaka za ovu turu.</p>
+    <a *ngIf="tourId && isDraft()" [routerLink]="['/tours', tourId, 'keypoints', 'create']" class="create-first-btn">
+      Dodaj prvu ključnu tačku
+    </a>
+  </div>
+
+  <div class="keypoint-list" *ngIf="!loading && keyPoints.length > 0">
+    <div class="keypoint-card" *ngFor="let keyPoint of keyPoints">
+      <div class="keypoint-header">
+        <h3>{{ keyPoint.naziv }}</h3>
+        <div class="keypoint-actions" *ngIf="isDraft()">
+          <button class="btn-edit" [routerLink]="['/tours', tourId, 'keypoints', 'edit', keyPoint.id]">
+            ✏️ Izmeni
+          </button>
+          <button class="btn-delete" (click)="deleteKeyPoint(keyPoint)">
+            🗑️ Obriši
+          </button>
+        </div>
+      </div>
+
+      <p class="keypoint-description">{{ keyPoint.opis }}</p>
+
+      <div class="keypoint-details">
+        <div class="detail-item">
+          <strong>Lokacija:</strong> {{ keyPoint.latitude | number:'1.6-6' }}, {{ keyPoint.longitude | number:'1.6-6' }}
+        </div>
+        <div class="detail-item" *ngIf="keyPoint.slikaUrl">
+          <strong>Slika:</strong> 
+          <a [href]="keyPoint.slikaUrl" target="_blank" class="image-link">
+            {{ keyPoint.slikaUrl }}
+          </a>
+        </div>
+        <div class="detail-item">
+          <strong>Kreirano:</strong> {{ keyPoint.createdAt | date:'dd.MM.yyyy HH:mm' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

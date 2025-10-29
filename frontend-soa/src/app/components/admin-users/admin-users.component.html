@@ -1,0 +1,84 @@
+<div class="admin-users-page">
+  <div class="page-header">
+    <h2>Upravljanje korisnicima</h2>
+  </div>
+
+  <!-- Search and Filter Bar -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <input 
+        type="text" 
+        placeholder="Pretraži korisnike..." 
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      />
+    </div>
+    <div class="filters">
+      <select [(ngModel)]="selectedRole" class="role-filter">
+        <option value="ALL">Svi korisnici</option>
+        <option [value]="'ROLE_ADMIN'">Administratori</option>
+        <option [value]="'ROLE_GUIDE'">Vodiči</option>
+        <option [value]="'ROLE_TOURIST'">Turisti</option>
+      </select>
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="showBlockedOnly" />
+        <span>Prikaži samo blokirane</span>
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Učitavanje korisnika...
+  </div>
+
+  <!-- User List -->
+  <div *ngIf="!loading" class="users-container">
+    <div class="users-list" *ngIf="filteredUsers.length > 0; else noUsers">
+      <div class="user-card" *ngFor="let user of filteredUsers">
+        <div class="user-info">
+          <div class="user-header">
+            <h3>{{ user.username }}</h3>
+            <span class="role-badge" [ngClass]="getRoleClass(user.role)">
+              {{ getRoleLabel(user.role) }}
+            </span>
+          </div>
+          <p class="user-email">{{ user.email }}</p>
+        </div>
+        <div class="user-actions">
+          <div class="status-indicator" [ngClass]="{'blocked': user.blocked, 'active': !user.blocked}">
+            <span *ngIf="user.blocked">🔒 Blokiran</span>
+            <span *ngIf="!user.blocked">✓ Aktivan</span>
+          </div>
+          <div class="action-buttons">
+            <button 
+              *ngIf="!user.blocked" 
+              class="btn-block" 
+              (click)="blockUser(user)"
+            >
+              Blokiraj
+            </button>
+            <button 
+              *ngIf="user.blocked" 
+              class="btn-unblock" 
+              (click)="unblockUser(user)"
+            >
+              Odblokiraj
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noUsers>
+      <div class="no-users">
+        <p>Nema korisnika koji odgovaraju filterima.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+

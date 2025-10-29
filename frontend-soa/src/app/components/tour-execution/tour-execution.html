@@ -1,0 +1,63 @@
+<!-- src/app/components/tour-execution/tour-execution.component.html -->
+<div class="tour-execution-page">
+  <div class="page-header">
+    <h2>Aktivna Tura</h2>
+    <button (click)="router.navigate(['/tours'])" class="back-btn">← Nazad na Ture</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Učitavanje aktivne ture...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="currentExecution && !loading">
+    <div class="execution-card">
+      <h3>Izvršenje Ture ID: {{ currentExecution.id }}</h3>
+      <p><strong>Status:</strong> <span class="status-badge status-{{currentExecution.status.toLowerCase()}}">{{ getTourExecutionStatusLabel(currentExecution.status) }}</span></p>
+      <p><strong>ID Ture:</strong> {{ currentExecution.tourId }}</p>
+      <p><strong>Turista:</strong> {{ currentExecution.touristUsername }}</p>
+      <p><strong>Vreme početka:</strong> {{ currentExecution.startTime | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+      <p *ngIf="currentExecution.endTime"><strong>Vreme završetka:</strong> {{ currentExecution.endTime | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+      <p><strong>Poslednja aktivnost:</strong> {{ currentExecution.lastActivityTime | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+      <p><strong>Trenutna lokacija:</strong> Lat: {{ currentExecution.currentLatitude | number:'1.4-4' }}, Lon: {{ currentExecution.currentLongitude | number:'1.4-4' }}</p>
+
+      <div class="execution-actions" *ngIf="currentExecution.status === TourExecutionStatus.STARTED">
+        <button class="btn-complete" (click)="completeTour()">Završi turu</button>
+        <button class="btn-abandon" (click)="abandonTour()">Napusti turu</button>
+        <!-- Pozivamo novu funkciju za otvaranje pop-up simulatora -->
+        <button class="btn-simulator" (click)="openPositionSimulatorAsPopup()">Otvori Simulator Pozicije</button>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <h3>Mapa Ture</h3>
+      <!-- Dodaj #tourMapElement za ViewChild -->
+      <app-tour-map
+        [keyPoints]="tourKeyPoints"
+        [currentLatitude]="currentExecution.currentLatitude"
+        [currentLongitude]="currentExecution.currentLongitude"
+        [completedKeyPointIds]="currentExecution.completedKeyPoints"
+      ></app-tour-map>
+    </div>
+
+    <div class="key-points-section">
+      <h3>Ključne Tačke Ture ({{ currentExecution.completedKeyPoints.length }}/{{ tourKeyPoints.length }})</h3>
+      <div *ngIf="tourKeyPoints.length === 0" class="no-keypoints">
+        <p>Nema definisanih ključnih tačaka za ovu turu.</p>
+      </div>
+      <ul class="key-point-list">
+        <li *ngFor="let kp of tourKeyPoints" [class.completed]="isKeyPointCompleted(kp.id)">
+          <h4>{{ kp.naziv }}</h4>
+          <p>{{ kp.opis }}</p>
+          <span *ngIf="isKeyPointCompleted(kp.id)" class="completed-badge">Dostignuto!</span>
+          <div class="key-point-location">
+            Lat: {{ kp.latitude | number:'1.4-4' }}, Lon: {{ kp.longitude | number:'1.4-4' }}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

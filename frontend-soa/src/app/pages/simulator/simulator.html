@@ -1,0 +1,12 @@
+<!-- src/app/components/simulator/simulator.component.html -->
+<div class="simulator-container">
+  <h2>Simulator pozicije turiste</h2>
+  <div id="map" style="height: 500px; width: 100%;"></div>
+
+  <div *ngIf="currentLocation">
+    <p>Trenutna pozicija (Username: {{ username }}): Lat: {{ currentLocation.latitude | number:'1.6-6' }}, Lon: {{ currentLocation.longitude | number:'1.6-6' }}</p>
+  </div>
+  <div *ngIf="!currentLocation">
+    <p>Kliknite na mapu da postavite trenutnu poziciju za usera: {{ username }}.</p>
+  </div>
+</div>

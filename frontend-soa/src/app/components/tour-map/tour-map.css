@@ -1,0 +1,39 @@
+/* Map specific styles for TourMapComponent */
+.map-frame {
+  height: 400px; /* Visina mape, možete je podesiti preko inputa ako je potrebno */
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* Custom Leaflet marker icons */
+.custom-div-icon {
+  background-color: transparent;
+  border: none;
+}
+
+.marker-pin {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -15px 0 0 -15px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.awesome {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  font-size: 1rem;
+  text-align: center;
+  color: white;
+  left: 50%;
+  top: 50%;
+  margin: -10px 0 0 -10px;
+  transform: rotate(45deg); /* Counter-rotate icon */
+  line-height: 20px;
+}

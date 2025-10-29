@@ -1,0 +1,93 @@
+<div class="edit-keypoint-page">
+  <div class="page-header">
+    <h2>Izmeni ključnu tačku</h2>
+    <button class="cancel-btn" (click)="onCancel()">❌ Otkaži</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Učitavanje ključne tačke...
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="keypoint-form" *ngIf="!loading && !error">
+    <div class="form-group">
+      <label for="naziv">Naziv ključne tačke *</label>
+      <input
+        id="naziv"
+        type="text"
+        [(ngModel)]="keyPointData.naziv"
+        name="naziv"
+        placeholder="Unesite naziv ključne tačke..."
+        class="form-input"
+        [class.error]="isCharacterLimitExceeded(keyPointData.naziv, 255)"
+        maxlength="255"
+        required
+      />
+      <div class="character-count" [class.error]="isCharacterLimitExceeded(keyPointData.naziv, 255)">
+        {{ getCharacterCount(keyPointData.naziv, 255) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="opis">Opis ključne tačke *</label>
+      <textarea
+        id="opis"
+        [(ngModel)]="keyPointData.opis"
+        name="opis"
+        placeholder="Unesite detaljan opis ključne tačke..."
+        class="form-textarea"
+        [class.error]="isCharacterLimitExceeded(keyPointData.opis, 1000)"
+        maxlength="1000"
+        rows="4"
+        required
+      ></textarea>
+      <div class="character-count" [class.error]="isCharacterLimitExceeded(keyPointData.opis, 1000)">
+        {{ getCharacterCount(keyPointData.opis, 1000) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="slikaUrl">URL slike</label>
+      <input
+        id="slikaUrl"
+        type="url"
+        [(ngModel)]="keyPointData.slikaUrl"
+        name="slikaUrl"
+        placeholder="https://example.com/slika.jpg"
+        class="form-input"
+        [class.error]="isCharacterLimitExceeded(keyPointData.slikaUrl || '', 500)"
+        maxlength="500"
+      />
+      <div class="character-count" [class.error]="isCharacterLimitExceeded(keyPointData.slikaUrl || '', 500)">
+        {{ getCharacterCount(keyPointData.slikaUrl || '', 500) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Lokacija na mapi *</label>
+      <div class="map-container">
+        <div id="map" class="map"></div>
+        <div class="map-instructions">
+          <p>Kliknite na mapu da biste promenili lokaciju ključne tačke</p>
+          <div class="coordinates">
+            <span><strong>Širina:</strong> {{ keyPointData.latitude | number:'1.6-6' }}</span>
+            <span><strong>Dužina:</strong> {{ keyPointData.longitude | number:'1.6-6' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="loading">
+        Otkaži
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="loading || !validateForm()">
+        <span *ngIf="loading">Ažuriranje...</span>
+        <span *ngIf="!loading">Ažuriraj ključnu tačku</span>
+      </button>
+    </div>
+  </form>
+</div>

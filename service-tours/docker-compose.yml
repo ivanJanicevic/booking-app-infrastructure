@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  tours-app:
+    build: .
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/tours
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=super
+      - EUREKA_CLIENT_ENABLED=true
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - SERVER_PORT=8083
+      # gRPC Client konfiguracija za Stakeholders Service
+      - GRPC_CLIENT_STAKEHOLDERS-SERVICE_ADDRESS=static://service-stakeholders:9094
+      - GRPC_CLIENT_STAKEHOLDERS-SERVICE_NEGOTIATIONTYPE=PLAINTEXT
+    depends_on:
+      - postgres
+    networks:
+      - tours-network
+
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=tours
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=super
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tours-network
+
+volumes:
+  postgres_data:
+
+networks:
+  tours-network:
+    driver: bridge
+

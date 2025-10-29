@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background-color: #f6f8fa;
+}
+
+.main-content {
+  margin-left: 240px;
+  padding: 40px 60px;
+  min-height: 100vh;
+}

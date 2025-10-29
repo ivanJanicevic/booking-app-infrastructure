@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  stakeholders-app:
+    build: .
+    container_name: stakeholders-app
+    ports:
+      - "8081:8081"
+      - "9094:9094"  # gRPC Server port
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/stakeholders
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=super
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://host.docker.internal:8761/eureka/
+      - SPRING_RABBITMQ_HOST=host.docker.internal
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://host.docker.internal:9411/api/v2/spans
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

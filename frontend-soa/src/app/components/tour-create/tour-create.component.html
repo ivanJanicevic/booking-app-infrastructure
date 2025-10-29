@@ -1,0 +1,83 @@
+<div class="create-tour-page">
+  <div class="page-header">
+    <h2>Kreiraj novu turu</h2>
+    <button class="cancel-btn" (click)="onCancel()">❌ Otkaži</button>
+  </div>
+
+  <!-- Form shown when creating tour -->
+  <form *ngIf="!createdTourId" (ngSubmit)="onSubmit()" class="tour-form">
+    <div class="form-group">
+      <label for="naziv">Naziv ture *</label>
+      <input id="naziv" type="text" [(ngModel)]="tourData.naziv" name="naziv" placeholder="Unesite naziv ture..."
+        class="form-input" [class.error]="isCharacterLimitExceeded(tourData.naziv, 255)" maxlength="255" required />
+      <div class="character-count" [class.error]="isCharacterLimitExceeded(tourData.naziv, 255)">
+        {{ getCharacterCount(tourData.naziv, 255) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="opis">Opis ture *</label>
+      <textarea id="opis" [(ngModel)]="tourData.opis" name="opis" placeholder="Unesite detaljan opis ture..."
+        class="form-textarea" [class.error]="isCharacterLimitExceeded(tourData.opis, 2000)" maxlength="2000" rows="6"
+        required></textarea>
+      <div class="character-count" [class.error]="isCharacterLimitExceeded(tourData.opis, 2000)">
+        {{ getCharacterCount(tourData.opis, 2000) }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="tezina">Težina ture *</label>
+      <select id="tezina" [(ngModel)]="tourData.tezina" name="tezina" class="form-select" required>
+        <option *ngFor="let diff of difficulties" [value]="diff.value">
+          {{ diff.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="tagovi">Tagovi</label>
+      <input id="tagovi" type="text" [(ngModel)]="tourData.tagovi" name="tagovi"
+        placeholder="Unesite tagove odvojene zarezom (npr. planina,nature,hiking)..." class="form-input"
+        [class.error]="isCharacterLimitExceeded(tourData.tagovi || '', 500)" maxlength="500" />
+      <div class="character-count" [class.error]="isCharacterLimitExceeded(tourData.tagovi || '', 500)">
+        {{ getCharacterCount(tourData.tagovi || '', 500) }}
+      </div>
+      <div class="help-text">
+        Tagovi pomažu korisnicima da lakše pronađu vašu turu. Koristite kratke, opisne reči odvojene zarezom.
+      </div>
+    </div>
+
+
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <!-- Form actions (shown when creating) -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="loading">
+        Otkaži
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="loading || !validateForm()">
+        <span *ngIf="loading">Kreiranje...</span>
+        <span *ngIf="!loading">Kreiraj turu</span>
+      </button>
+    </div>
+  </form>
+
+  <!-- Success message and actions after tour creation -->
+  <div *ngIf="createdTourId" class="success-section">
+    <div class="success-message">
+      <h3>✅ Tura je uspešno kreirana!</h3>
+      <p>Želite li da dodate ključne tačke?</p>
+    </div>
+
+    <div class="success-actions">
+      <button type="button" class="btn-success" (click)="onGoToKeypoints()">
+        📍 Dodaj ključne tačke
+      </button>
+      <button type="button" class="btn-secondary" (click)="onBackToTours()">
+        Nazad na ture
+      </button>
+    </div>
+  </div>
+</div>
